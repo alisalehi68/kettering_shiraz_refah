@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>کترینگ و بیرون‌بر رفاه شیراز | هرچی بخوای کیلویی یا هر مقدار</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Pro / Free Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Vazirmatn -->
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Tailwind Custom Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        refahBg: '#0f0f10',
+                        refahCard: '#18181b',
+                        refahGold: '#f59e0b',
+                        refahOrange: '#ea580c',
+                        refahDarkCard: '#121215',
+                    },
+                    fontFamily: {
+                        sans: ['Vazirmatn', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: #0f0f10;
+            color: #f4f4f5;
+            overflow-x: hidden;
+        }
+        .glass-panel {
+            background: rgba(24, 24, 27, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(245, 158, 11, 0.15);
+        }
+        .glass-nav {
+            background: rgba(15, 15, 16, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .hero-glow {
+            background: radial-gradient(circle at 50% 20%, rgba(234, 88, 12, 0.25) 0%, rgba(245, 158, 11, 0.1) 40%, transparent 70%);
+        }
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        .floating {
+            animation: floatSlow 4s ease-in-out infinite;
+        }
+        @keyframes pulseGold {
+            0%, 100% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.4); }
+            50% { box-shadow: 0 0 40px rgba(234, 88, 12, 0.8); }
+        }
+        .glow-btn {
+            animation: pulseGold 3s infinite;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f0f10;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #27272a;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ea580c;
+        }
+    </style>
+</head>
+<body class="bg-refahBg text-gray-100 selection:bg-refahOrange selection:text-white">
+
+    <!-- Toast Notification Box -->
+    <div id="toast" class="fixed bottom-6 left-6 z-50 transform translate-y-28 opacity-0 transition-all duration-300 bg-gradient-to-r from-refahOrange to-refahGold text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3 font-semibold border border-white/20">
+        <i class="fa-solid fa-circle-check text-2xl"></i>
+        <span id="toast-message">عملیات با موفقیت انجام شد!</span>
+    </div>
+
+    <!-- Sticky Navigation Bar -->
+    <header class="fixed top-0 left-0 right-0 z-40 glass-nav border-b border-white/10 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Brand Logo & Name -->
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-refahOrange to-refahGold flex items-center justify-center shadow-xl shadow-refahOrange/30 transform group-hover:scale-105 transition duration-300">
+                    <i class="fa-solid fa-fire-burner text-white text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-black tracking-wider text-white">کترینگ <span class="text-refahGold">رفه</span></h1>
+                    <p class="text-xs text-gray-400 font-medium">شیراز | بیرون‌بر و کیلویی</p>
+                </div>
+            </a>
+
+            <!-- Desktop Navigation Links -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium">
+                <a href="#hero" class="hover:text-refahGold transition">صفحه اصلی</a>
+                <a href="#usp" class="hover:text-refahGold transition">چرا خرید کیلویی؟</a>
+                <a href="#menu" class="hover:text-refahGold transition">منوی لذیذ غذاها</a>
+                <a href="#about" class="hover:text-refahGold transition">درباره ما و لوکیشن</a>
+                <a href="#contact" class="hover:text-refahGold transition">تماس و سفارش</a>
+            </nav>
+
+            <!-- Actions & Cart Trigger -->
+            <div class="hidden sm:flex items-center gap-4">
+                <button onclick="toggleCartDrawer()" class="relative bg-refahCard hover:bg-refahCard/80 border border-white/10 text-white px-4 py-2.5 rounded-xl font-bold transition flex items-center gap-2.5">
+                    <i class="fa-solid fa-cart-shopping text-refahGold"></i>
+                    <span>سبد سفارش</span>
+                    <span id="cart-badge" class="absolute -top-2 -right-2 bg-refahOrange text-white text-xs w-6 h-6 rounded-full flex items-center justify-center font-black shadow-lg">0</span>
+                </button>
+                <a href="tel:09177999345" class="bg-gradient-to-r from-refahOrange to-refahGold text-white px-5 py-2.5 rounded-xl font-bold shadow-lg shadow-refahOrange/30 hover:opacity-95 transition transform hover:-translate-y-0.5 flex items-center gap-2">
+                    <i class="fa-solid fa-phone-volume"></i>
+                    <span>تماس فوری</span>
+                </a>
+            </div>
+
+            <!-- Mobile Menu Toggle Button -->
+            <div class="flex items-center gap-3 md:hidden">
+                <button onclick="toggleCartDrawer()" class="relative bg-refahCard p-2.5 rounded-xl text-refahGold border border-white/10">
+                    <i class="fa-solid fa-cart-shopping text-lg"></i>
+                    <span id="cart-badge-mobile" class="absolute -top-1 -right-1 bg-refahOrange text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-black">0</span>
+                </button>
+                <button id="mobile-menu-btn" class="text-2xl text-gray-200 focus:outline-none p-2">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden glass-panel border-b border-white/10 px-6 py-5 space-y-4">
+            <a href="#hero" class="block text-gray-200 hover:text-refahGold font-medium">صفحه اصلی</a>
+            <a href="#usp" class="block text-gray-200 hover:text-refahGold font-medium">چرا خرید کیلویی؟</a>
+            <a href="#menu" class="block text-gray-200 hover:text-refahGold font-medium">منوی لذیذ غذاها</a>
+            <a href="#about" class="block text-gray-200 hover:text-refahGold font-medium">درباره ما و لوکیشن</a>
+            <a href="#contact" class="block text-gray-200 hover:text-refahGold font-medium">تماس و سفارش</a>
+            <div class="pt-2 border-t border-white/10">
+                <a href="tel:09177999345" class="w-full text-center block bg-gradient-to-r from-refahOrange to-refahGold text-white py-3 rounded-xl font-bold shadow-lg">تماس مستقیم: 09177999345</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="hero" class="relative min-h-screen flex items-center justify-center hero-glow pt-28 pb-20 px-4 overflow-hidden">
+        <!-- Background Decorative Blur Elements -->
+        <div class="absolute top-1/4 right-10 w-96 h-96 bg-refahOrange/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute bottom-10 left-10 w-96 h-96 bg-refahGold/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
+            <!-- Left Hero Content -->
+            <div class="lg:col-span-7 space-y-8 text-right">
+                <!-- Floating Badge -->
+                <div class="inline-flex items-center gap-2.5 px-4 py-2 rounded-full glass-panel border-refahGold/30 text-refahGold text-sm font-semibold shadow-xl">
+                    <i class="fa-solid fa-bullseye text-refahOrange animate-bounce"></i>
+                    <span>اولین و بهترین کترینگ کیلویی در شیراز</span>
+                </div>
+
+                <!-- Massive Luxury Headline -->
+                <h1 class="text-4xl sm:text-6xl lg:text-7xl font-black text-white leading-tight tracking-tight">
+                    طعم اصیل ایرانی، <br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-refahOrange via-refahGold to-amber-200">به اندازه دلخواه شما</span>
+                </h1>
+
+                <!-- Subtitle -->
+                <p class="text-lg sm:text-xl text-gray-300 font-light leading-relaxed max-w-2xl">
+                    هرچی بخوای کیلویی یا هر مقدار! با کیفیت بی‌نظیر مواد اولیه تازه روز، برنج صددرصد ایرانی زعفرانی و مناسب‌ترین قیمت در شیراز.
+                </p>
+
+                <!-- CTA Buttons -->
+                <div class="flex flex-col sm:flex-row items-center gap-4 pt-2">
+                    <a href="#menu" class="w-full sm:w-auto bg-gradient-to-r from-refahOrange to-refahGold text-white text-lg font-bold px-8 py-4 rounded-2xl shadow-2xl glow-btn transition transform hover:-translate-y-1 flex items-center justify-center gap-3">
+                        <i class="fa-solid fa-utensils"></i>
+                        <span>مشاهده منوی کیلویی</span>
+                    </a>
+                    <a href="https://instagram.com/kettering_shiraz_refah" target="_blank" class="w-full sm:w-auto glass-panel hover:bg-white/10 text-white text-lg font-medium px-8 py-4 rounded-2xl backdrop-blur transition flex items-center justify-center gap-3 border border-white/15">
+                        <i class="fa-brands fa-instagram text-xl text-pink-500"></i>
+                        <span>اینستاگرام (176K+)</span>
+                    </a>
+                </div>
+
+                <!-- Quick Stats Bar -->
+                <div class="grid grid-cols-3 gap-4 pt-6 border-t border-white/10">
+                    <div>
+                        <p class="text-2xl sm:text-3xl font-black text-refahGold">۱۷۶K+</p>
+                        <p class="text-xs text-gray-400 mt-1">دنبال‌کننده وفادار</p>
+                    </div>
+                    <div>
+                        <p class="text-2xl sm:text-3xl font-black text-refahOrange">۱۰۰٪</p>
+                        <p class="text-xs text-gray-400 mt-1">تازه و روزانه</p>
+                    </div>
+                    <div>
+                        <p class="text-2xl sm:text-3xl font-black text-white">شیراز</p>
+                        <p class="text-xs text-gray-400 mt-1">بلوار زرعی، پارک قوری</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Hero Image Showcase & Floating Cards -->
+            <div class="lg:col-span-5 relative">
+                <div class="relative mx-auto max-w-md lg:max-w-none">
+                    <!-- Main Image Frame with Glowing Border -->
+                    <div class="rounded-3xl overflow-hidden shadow-2xl border-2 border-refahGold/30 relative aspect-square">
+                        <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80" alt="کباب و غذای ایرانی لوکس کترینگ رفاه" class="w-full h-full object-cover transform hover:scale-105 transition duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                        <div class="absolute bottom-6 right-6 left-6 text-right">
+                            <span class="bg-refahOrange text-white text-xs font-black px-3 py-1 rounded-lg uppercase">ویژه روز</span>
+                            <h3 class="text-xl font-bold text-white mt-2">سینی مخصوص کباب و برنج زعفرانی رفه</h3>
+                        </div>
+                    </div>
+
+                    <!-- Floating Card 1 (Top Left) -->
+                    <div class="absolute -top-6 -left-6 glass-panel p-4 rounded-2xl shadow-2xl floating hidden sm:flex items-center gap-3 border border-refahGold/40">
+                        <div class="w-10 h-10 rounded-xl bg-refahGold/20 text-refahGold flex items-center justify-center font-bold">
+                            <i class="fa-solid fa-scale-balanced text-lg"></i>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-xs font-bold text-white">خرید به میزان دلخواه</p>
+                            <p class="text-[10px] text-gray-400">کیلویی، گرمی یا دیسی</p>
+                        </div>
+                    </div>
+
+                    <!-- Floating Card 2 (Bottom Right) -->
+                    <div class="absolute -bottom-6 -right-6 glass-panel p-4 rounded-2xl shadow-2xl floating hidden sm:flex items-center gap-3 border border-refahOrange/40" style="animation-delay: 2s;">
+                        <div class="w-10 h-10 rounded-xl bg-refahOrange/20 text-refahOrange flex items-center justify-center font-bold">
+                            <i class="fa-solid fa-star text-lg"></i>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-xs font-bold text-white">کیفیت درجه یک</p>
+                            <p class="text-[10px] text-gray-400">بهترین قیمت در شیراز</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- USP / Kiloo-i Concept Section -->
+    <section id="usp" class="py-20 px-4 bg-refahCard/50 border-t border-b border-white/5 relative">
+        <div class="max-w-7xl mx-auto space-y-12">
+            <div class="text-center space-y-4 max-w-2xl mx-auto">
+                <span class="text-refahGold font-bold text-sm tracking-wider uppercase">نوآوری در پذیرایی</span>
+                <h2 class="text-3xl sm:text-5xl font-black text-white">چرا خرید <span class="text-refahOrange">کیلویی</span> کترینگ رفاه؟</h2>
+                <p class="text-gray-400 text-sm sm:text-base">سیستم خرید انعطاف‌پذیر ما به شما اجازه می‌دهد دقیقاً به اندازه نیاز و اشتهای خود خرید کنید.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="glass-panel p-8 rounded-3xl space-y-4 transform hover:-translate-y-2 transition duration-300 group">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-refahOrange to-refahGold flex items-center justify-center text-white text-2xl shadow-xl shadow-refahOrange/20 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-piggy-bank"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">صرفه‌جویی اقتصادی فوق‌العاده</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">دیگر مجبور به خرید پرس‌های با حجم ثابت نیستید. هزینه را بر اساس مقدار دقیق مصرفی خود مدیریت کنید.</p>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="glass-panel p-8 rounded-3xl space-y-4 transform hover:-translate-y-2 transition duration-300 group">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-refahOrange to-refahGold flex items-center justify-center text-white text-2xl shadow-xl shadow-refahOrange/20 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-ban-smoking"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">صفر درصد دورریز غذا</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">برای دورهمی‌ها، مهمانی‌ها یا وعده روزانه، دقیقاً همان مقدار گرمی یا کیلوگرمی که نیاز دارید را سفارشی تحویل بگیرید.</p>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="glass-panel p-8 rounded-3xl space-y-4 transform hover:-translate-y-2 transition duration-300 group">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-refahOrange to-refahGold flex items-center justify-center text-white text-2xl shadow-xl shadow-refahOrange/20 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-plate-wheat"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">تنوع بالا در یک سفارش</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">می‌توانید چند مدل کباب، جوجه و خورشت را به صورت ترکیبی و در مقادیر دلخواه در یک دیس داشته باشید.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stunning Dynamic Food Menu Section -->
+    <section id="menu" class="py-20 px-4 bg-refahBg relative">
+        <div class="max-w-7xl mx-auto space-y-12">
+            <!-- Section Header -->
+            <div class="text-center space-y-4 max-w-2xl mx-auto">
+                <span class="text-refahGold font-bold text-sm tracking-wider uppercase">منوی اشتهابرانگیز و لذیذ</span>
+                <h2 class="text-3xl sm:text-5xl font-black text-white">شاهکارهای آشپزی کترینگ رفاه</h2>
+                <p class="text-gray-400 text-sm sm:text-base">تمامی غذاها روزانه با گوشت تازه، برنج ایرانی و روغن حیوانی طبخ می‌شوند.</p>
+            </div>
+
+            <!-- Filter Tabs -->
+            <div class="flex flex-wrap justify-center gap-3">
+                <button onclick="filterMenu('all')" class="menu-tab active-tab bg-refahOrange text-white px-6 py-3 rounded-2xl font-bold text-sm shadow-xl transition">همه آیتم‌ها</button>
+                <button onclick="filterMenu('kebab')" class="menu-tab bg-refahCard text-gray-300 hover:text-white px-6 py-3 rounded-2xl font-bold text-sm border border-white/10 transition">کباب‌ها و جوجه</button>
+                <button onclick="filterMenu('rice')" class="menu-tab bg-refahCard text-gray-300 hover:text-white px-6 py-3 rounded-2xl font-bold text-sm border border-white/10 transition">برنج و خورشت</button>
+                <button onclick="filterMenu('finger')" class="menu-tab bg-refahCard text-gray-300 hover:text-white px-6 py-3 rounded-2xl font-bold text-sm border border-white/10 transition">فینگرفود و پیش‌غذا</button>
+                <button onclick="filterMenu('salad')" class="menu-tab bg-refahCard text-gray-300 hover:text-white px-6 py-3 rounded-2xl font-bold text-sm border border-white/10 transition">سالادبار</button>
+            </div>
+
+            <!-- Menu Grid -->
+            <div id="menu-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 text-right">
+                
+                <!-- Item 1 -->
+                <div class="menu-item glass-panel rounded-3xl overflow-hidden shadow-2xl transform hover:-translate-y-2 transition duration-300 flex flex-col justify-between" data-category="kebab">
+                    <div>
+                        <div class="h-56 overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=700&q=80" alt="کباب کوبیده مخصوص" class="w-full h-full object-cover transform hover:scale-110 transition duration-700">
+                            <span class="absolute top-4 left-4 bg-refahOrange text-white text-xs font-black px-3 py-1.5 rounded-xl shadow-lg">فروش کیلویی / دیسی</span>
+                        </div>
+                        <div class="p-6 space-y-3">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-xl font-bold text-white">کباب کوبیده مخصوص رفاه</h3>
+                                <span class="text-refahGold font-black text-sm">پرطرفدار</span>
+                            </div>
+                            <p class="text-gray-400 text-sm leading-relaxed">گوشت تازه گوسفندی و گوساله، پیاز تازه، پخت ذغالی با عطر و طعم خانگی و کره محلی.</p>
+                        </div>
+                    </div>
+                    <div class="p-6 pt-0 flex items-center justify-between border-t border-white/10 mt-4">
+                        <div>
+                            <span class="text-xs text-gray-400 block">نرخ:</span>
+                            <span class="text-refahGold font-black text-sm">بر اساس وزن (کیلو/گرمی)</span>
+                        </div>
+                        <button onclick="addToCart('کباب کوبیده مخصوص رفاه', 'کیلوگرم')" class="bg-gradient-to-r from-refahOrange to-refahGold text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow-lg shadow-refahOrange/30 hover:opacity-95 transition flex items-center gap-2">
+                            <i class="fa-solid fa-cart-plus"></i>
+                            <span>افزودن به سبد</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Item 2 -->
+                <div class="menu-item glass-panel rounded-3xl overflow-hidden shadow-2xl transform hover:-translate-y-2 transition duration-300 flex flex-col justify-between" data-category="kebab">
+                    <div>
+                        <div class="h-56 overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?auto=format&fit=crop&w=700&q=80" alt="جوجه کباب زعفرانی" class="w-full h-full object-cover transform hover:scale-110 transition duration-700">
+                            <span class="absolute top-4 left-4 bg-refahOrange text-white text-xs font-black px-3 py-1.5 rounded-xl shadow-lg">فروش کیلویی / دیسی</span>
+                        </div>
+                        <div class="p-6 space-y-3">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-xl font-bold text-white">جوجه‌کباب استخوانی و بی‌استخوان</h3>
+                                <span class="text-refahGold font-black text-sm">زعفران اعلا</span>
+                            </div>
+                            <p class="text-gray-400 text-sm leading-relaxed">سینه و ران مرغ تازه طعم‌دار شده در زعفران خالص و آبلیمو طبیعی، ترد و آبدار.</p>
+                        </div>
+                    </div>
+                    <div class="p-6 pt-0 flex items-center justify-between border-t border-white/10 mt-4">
+                        <div>
+                            <span class="text-xs text-gray-400 block">نرخ:</span>
+                            <span class="text-refahGold font-black text-sm">بر اساس وزن (کیلو/گرمی)</span>
+                        </div>
+                        <button onclick="addToCart('جوجه‌کباب زعفرانی', 'کیلوگرم')" class="bg-gradient-to-r from-refahOrange to-refahGold text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow-lg shadow-refahOrange/30 hover:opacity-95 transition flex items-center gap-2">
+                            <i class="fa-solid fa-cart-plus"></i>
+                            <span>افزودن به سبد</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Item 3 -->
+                <div class="menu-item glass-panel rounded-3xl overflow-hidden shadow-2xl transform hover:-translate-y-2 transition duration-300 flex flex-col justify-between" data-category="rice">
+                    <div>
+                        <div class="h-56 overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=700&q=80" alt="برنج زعفرانی" class="w-full h-full object-cover transform hover:scale-110 transition duration-700">
+                            <span class="absolute top-4 left-4 bg-amber-600 text-white text-xs font-black px-3 py-1.5 rounded-xl shadow-lg">صددرصد ایرانی</span>
+                        </div>
+                        <div class="p-6 space-y-3">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-xl font-bold text-white">پلو زعفرانی با ته‌دیگ زعفرانی</h3>
+                                <span class="text-refahGold font-black text-sm">عطر روغن حیوانی</span>
+                            </div>
+                            <p class="text-gray-400 text-sm leading-relaxed">برنج اعلا دانه بلند دم‌کشیده همراه با زعفران فراوان و ته‌دیگ ترد و طلایی.</p>
+                        </div>
+                    </div>
+                    <div class="p-6 pt-0 flex items-center justify-between border-t border-white/10 mt-4">
+                        <div>
+                            <span class="text-xs text-gray-400 block">نرخ:</span>
+                            <span class="text-refahGold font-black text-sm">پرس / گرمی</span>
+                        </div>
+                        <button onclick="addToCart('پلو زعفرانی اعلا', 'دیس/پرس')" class="bg-gradient-to-r from-refahOrange to-refahGold text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow-lg shadow-refahOrange/30 hover:opacity-95 transition flex items-center gap-2">
+                            <i class="fa-solid fa-cart-plus"></i>
+                            <span>افزودن به سبد</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Item 4 -->
+                <div class="menu-item glass-panel rounded-3xl overflow-hidden shadow-2xl transform hover:-translate-y-2 transition duration-300 flex flex-col justify-between" data-category="rice">
+                    <div>
+                        <div class="h-56 overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=700&q=80" alt="زرشک پلو با مرغ" class="w-full h-full object-cover transform hover:scale-110 transition duration-700">
+                            <span class="absolute top-4 left-4 bg-refahOrange text-white text-xs font-black px-3 py-1.5 rounded-xl shadow-lg">غذای سنتی</span>
+                        </div>
+                        <div class="p-6 space-y-3">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-xl font-bold text-white">زرشک‌پلو با مرغ مجلسی</h3>
+                                <span class="text-refahGold font-black text-sm">محبوب خانوادگی</span>
+                            </div>
+                            <p class="text-gray-400 text-sm leading-relaxed">مرغ تازه پخته شده در سس غلیظ زعفرانی همراه با زرشک اعلا و خلال پسته.</p>
+                        </div>
+                    </div>
+                    <div class="p-6 pt-0 flex items-center justify-between border-t border-white/10 mt-4">
+                        <div>
+                            <span class="text-xs text-gray-400 block">نرخ:</span>
+                            <span class="text-refahGold font-black text-sm">پرس / کیلویی</span>
+                        </div>
+                        <button onclick="addToCart('زرشک‌پلو با مرغ مجلسی', 'پرس')" class="bg-gradient-to-r from-refahOrange to-refahGold text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow-lg shadow-refahOrange/30 hover:opacity-95 transition flex items-center gap-2">
+                            <i class="fa-solid fa-cart-plus"></i>
+                            <span>افزودن به سبد</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Item 5 -->
+                <div class="menu-item glass-panel rounded-3xl overflow-hidden shadow-2xl transform hover:-translate-y-2 transition duration-300 flex flex-col justify-between" data-category="finger">
+                    <div>
+                        <div class="h-56 overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1541544741938-0af808871cc0?auto=format&fit=crop&w=700&q=80" alt="فینگرفود" class="w-full h-full object-cover transform hover:scale-110 transition duration-700">
+                            <span class="absolute top-4 left-4 bg-purple-600 text-white text-xs font-black px-3 py-1.5 rounded-xl shadow-lg">مهمانی و مجالس</span>
+                        </div>
+                        <div class="p-6 space-y-3">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-xl font-bold text-white">فینگرفودهای تخصصی رفاه</h3>
+                                <span class="text-refahGold font-black text-sm">شیک و مدرن</span>
+                            </div>
+                            <p class="text-gray-400 text-sm leading-relaxed">انواع فینگرفود، پیش‌غذای مدرن و سینی‌های پذیرایی مناسب دورهمی، تولد و مراسم.</p>
+                        </div>
+                    </div>
+                    <div class="p-6 pt-0 flex items-center justify-between border-t border-white/10 mt-4">
+                        <div>
+                            <span class="text-xs text-gray-400 block">نرخ:</span>
+                            <span class="text-refahGold font-black text-sm">سینی / عددی</span>
+                        </div>
+                        <button onclick="addToCart('فینگرفودهای تخصصی رفاه', 'سینی')" class="bg-gradient-to-r from-refahOrange to-refahGold text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow-lg shadow-refahOrange/30 hover:opacity-95 transition flex items-center gap-2">
+                            <i class="fa-solid fa-cart-plus"></i>
+                            <span>افزودن به سبد</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Item 6 -->
+                <div class="menu-item glass-panel rounded-3xl overflow-hidden shadow-2xl transform hover:-translate-y-2 transition duration-300 flex flex-col justify-between" data-category="salad">
+                    <div>
+                        <div class="h-56 overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=700&q=80" alt="سالادبار" class="w-full h-full object-cover transform hover:scale-110 transition duration-700">
+                            <span class="absolute top-4 left-4 bg-emerald-600 text-white text-xs font-black px-3 py-1.5 rounded-xl shadow-lg">تازه و ارگانیک</span>
+                        </div>
+                        <div class="p-6 space-y-3">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-xl font-bold text-white">سالادبار و ترشیجات خانگی</h3>
+                                <span class="text-refahGold font-black text-sm">کاملا تازه</span>
+                            </div>
+                            <p class="text-gray-400 text-sm leading-relaxed">سالاد فصل، سالاد شیرازی ترد، زیتون پرورده اعلا و ترشیجات خانگی مرغوب.</p>
+                        </div>
+                    </div>
+                    <div class="p-6 pt-0 flex items-center justify-between border-t border-white/10 mt-4">
+                        <div>
+                            <span class="text-xs text-gray-400 block">نرخ:</span>
+                            <span class="text-refahGold font-black text-sm">کیلویی / ظرفی</span>
+                        </div>
+                        <button onclick="addToCart('سالادبار و ترشیجات خانگی', 'ظرف/کیلو')" class="bg-gradient-to-r from-refahOrange to-refahGold text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow-lg shadow-refahOrange/30 hover:opacity-95 transition flex items-center gap-2">
+                            <i class="fa-solid fa-cart-plus"></i>
+                            <span>افزودن به سبد</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- About & Location Section -->
+    <section id="about" class="py-20 px-4 bg-refahCard/30 border-t border-white/5 relative">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <!-- Text Content -->
+            <div class="space-y-6 text-right">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-refahOrange/10 text-refahOrange font-semibold text-sm">
+                    <i class="fa-solid fa-map-location-dot"></i>
+                    <span>حضور در قلب شیراز</span>
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-black text-white leading-tight">
+                    کترینگ و بیرون‌بر <span class="text-refahGold">رفه</span> در شیراز
+                </h2>
+                <p class="text-gray-300 leading-relaxed text-base">
+                    ما افتخار داریم با تیمی مجرب و استفاده از مرغوب‌ترین گوشت‌ها و برنج‌های ایرانی، طعمی فراموش‌نشدنی را برای وعده‌های غذایی و مهمانی‌های شما در شیراز فراهم کنیم. هر مقدار که نیاز داشته باشید، به صورت حضوری یا تلفنی در خدمت شما هستیم.
+                </p>
+                <div class="space-y-4 pt-2">
+                    <div class="glass-panel p-4 rounded-2xl flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-refahOrange/20 text-refahOrange flex items-center justify-center text-xl flex-shrink-0">
+                            <i class="fa-solid fa-location-dot"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white text-sm">آدرس دقیق</h4>
+                            <p class="text-xs text-gray-300 mt-1">شیراز، بلوار زرعی، پارک قوری، فروشگاه رفاه، کترینگ رفاه</p>
+                        </div>
+                    </div>
+                    <div class="glass-panel p-4 rounded-2xl flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-refahGold/20 text-refahGold flex items-center justify-center text-xl flex-shrink-0">
+                            <i class="fa-solid fa-clock"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white text-sm">ساعت کاری</h4>
+                            <p class="text-xs text-gray-300 mt-1">همه روزه از ساعت ۱۱:۰۰ صبح الی ۲۳:۰۰ شب</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Image Collage -->
+            <div class="grid grid-cols-2 gap-4">
+                <div class="rounded-3xl overflow-hidden shadow-2xl border border-white/10 h-72 transform hover:scale-105 transition duration-500">
+                    <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80" alt="غذای ایرانی" class="w-full h-full object-cover">
+                </div>
+                <div class="rounded-3xl overflow-hidden shadow-2xl border border-white/10 h-72 transform hover:scale-105 transition duration-500 mt-8">
+                    <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=600&q=80" alt="رستوران و کترینگ" class="w-full h-full object-cover">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact & Order Form Section -->
+    <section id="contact" class="py-20 px-4 bg-refahBg relative border-t border-white/5">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <!-- Contact Info Cards -->
+            <div class="space-y-8 text-right">
+                <div class="space-y-4">
+                    <span class="text-refahGold font-bold text-sm tracking-wider uppercase">ارتباط مستقیم با مدیریت</span>
+                    <h2 class="text-3xl sm:text-4xl font-black text-white">همین حالا با ما تماس بگیرید</h2>
+                    <p class="text-gray-400 text-sm sm:text-base">برای ثبت سفارش‌های کیلویی فوری یا رزرو دیس‌های مجلسی مهمانی، شماره‌های زیر پاسخگوی شما هستند.</p>
+                </div>
+
+                <div class="space-y-4">
+                    <!-- Phone 1 -->
+                    <div class="glass-panel p-5 rounded-2xl flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-refahGold/20 text-refahGold flex items-center justify-center text-xl flex-shrink-0">
+                                <i class="fa-solid fa-phone"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-white text-base">خط مستقیم سفارش ۱</h4>
+                                <p dir="ltr" class="text-sm text-refahGold font-bold mt-1 text-right">0917-799-9345</p>
+                            </div>
+                        </div>
+                        <a href="tel:09177999345" class="bg-refahOrange text-white px-5 py-2.5 rounded-xl text-xs font-bold hover:opacity-95 shadow">تماس</a>
+                    </div>
+
+                    <!-- Phone 2 -->
+                    <div class="glass-panel p-5 rounded-2xl flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-refahGold/20 text-refahGold flex items-center justify-center text-xl flex-shrink-0">
+                                <i class="fa-solid fa-phone"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-white text-base">خط مستقیم سفارش ۲</h4>
+                                <p dir="ltr" class="text-sm text-refahGold font-bold mt-1 text-right">0901-773-8016</p>
+                            </div>
+                        </div>
+                        <a href="tel:09017738016" class="bg-refahOrange text-white px-5 py-2.5 rounded-xl text-xs font-bold hover:opacity-95 shadow">تماس</a>
+                    </div>
+
+                    <!-- Instagram -->
+                    <div class="glass-panel p-5 rounded-2xl flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-pink-500/20 text-pink-500 flex items-center justify-center text-xl flex-shrink-0">
+                                <i class="fa-brands fa-instagram"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-white text-base">صفحه رسمی اینستاگرام</h4>
+                                <p dir="ltr" class="text-sm text-pink-400 font-bold mt-1 text-right">@kettering_shiraz_refah</p>
+                            </div>
+                        </div>
+                        <a href="https://instagram.com/kettering_shiraz_refah" target="_blank" class="bg-pink-600 text-white px-5 py-2.5 rounded-xl text-xs font-bold hover:opacity-95 shadow">مشاهده</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Inquiry / Form -->
+            <div class="glass-panel p-8 rounded-3xl shadow-2xl space-y-6 border border-white/10">
+                <h3 class="text-2xl font-black text-white text-right">فرم ثبت سفارش یا رزرو سریع</h3>
+                <p class="text-gray-400 text-sm text-right">مشخصات و اقلام مورد نظر خود را وارد کنید تا همکاران ما در کترینگ رفاه با شما تماس بگیرند.</p>
+                
+                <form id="orderForm" onsubmit="handleFormSubmit(event)" class="space-y-4 text-right">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1.5">نام و نام خانوادگی</label>
+                        <input type="text" id="clientName" required class="w-full bg-refahBg border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-refahOrange transition" placeholder="مثلا: سارا احمدی">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1.5">شماره تماس همراه</label>
+                        <input type="tel" id="clientPhone" required class="w-full bg-refahBg border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-refahOrange transition text-right" placeholder="مثلا: 09171234567">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1.5">شرح سفارش (نوع غذا، مقدار کیلویی یا تعداد)</label>
+                        <textarea id="clientDetails" rows="3" required class="w-full bg-refahBg border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-refahOrange transition" placeholder="مثلا: یک کیلو و نیم کباب کوبیده و دو دیس برنج زعفرانی..."></textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-gradient-to-r from-refahOrange to-refahGold text-white font-bold py-4 rounded-xl shadow-xl shadow-refahOrange/30 hover:opacity-95 transition transform hover:-translate-y-0.5">
+                        ثبت نهایی سفارش و ارسال
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Cart Drawer (Slide-over) -->
+    <div id="cart-drawer" class="fixed inset-0 z-50 transform translate-x-full transition-transform duration-300 flex justify-end">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="toggleCartDrawer()"></div>
+        <div class="relative w-full max-w-md bg-refahCard h-full shadow-2xl flex flex-col border-l border-white/10 z-10">
+            <!-- Drawer Header -->
+            <div class="p-6 border-b border-white/10 flex items-center justify-between">
+                <button onclick="toggleCartDrawer()" class="text-gray-400 hover:text-white p-2">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+                <div class="flex items-center gap-3">
+                    <h3 class="text-lg font-bold text-white">سبد سفارش‌های کیلویی</h3>
+                    <i class="fa-solid fa-cart-shopping text-refahGold"></i>
+                </div>
+            </div>
+
+            <!-- Cart Items Container -->
+            <div id="cart-items-container" class="flex-1 overflow-y-auto p-6 space-y-4">
+                <div id="empty-cart-msg" class="text-center py-20 text-gray-500 space-y-3">
+                    <i class="fa-solid fa-basket-shopping text-5xl"></i>
+                    <p class="text-sm">سبد سفارش شما خالی است.</p>
+                </div>
+            </div>
+
+            <!-- Drawer Footer -->
+            <div class="p-6 border-t border-white/10 space-y-4 bg-refahBg/50">
+                <div class="flex justify-between items-center text-sm font-bold text-gray-300">
+                    <span>تعداد اقلام انتخابی:</span>
+                    <span id="cart-total-count" class="text-refahGold">0 آیتم</span>
+                </div>
+                <button onclick="checkoutCart()" class="w-full bg-gradient-to-r from-refahOrange to-refahGold text-white font-bold py-3.5 rounded-xl shadow-xl hover:opacity-95 transition">
+                    ارسال سفارش به کترینگ رفاه
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-black text-gray-400 py-12 px-4 border-t border-white/10">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-right">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-refahOrange flex items-center justify-center text-white font-bold">
+                    <i class="fa-solid fa-fire-burner"></i>
+                </div>
+                <div>
+                    <p class="text-white font-bold text-sm">کترینگ و بیرون‌بر رفاه شیراز</p>
+                    <p class="text-xs text-gray-500">هرچی بخوای کیلویی یا هر مقدار</p>
+                </div>
+            </div>
+
+            <div class="text-xs text-gray-500">
+                طراحی شده با استانداردهای لوکس | تمامی حقوق محفوظ است © 2026
+            </div>
+
+            <div class="flex items-center gap-4 text-xl">
+                <a href="https://instagram.com/kettering_shiraz_refah" target="_blank" class="w-10 h-10 rounded-xl bg-white/5 hover:bg-pink-600 hover:text-white flex items-center justify-center transition">
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
+                <a href="tel:09177999345" class="w-10 h-10 rounded-xl bg-white/5 hover:bg-refahOrange hover:text-white flex items-center justify-center transition">
+                    <i class="fa-solid fa-phone"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Interactivity -->
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // Filter Menu Logic
+        function filterMenu(category) {
+            const tabs = document.querySelectorAll('.menu-tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('bg-refahOrange', 'text-white');
+                tab.classList.add('bg-refahCard', 'text-gray-300');
+            });
+            event.target.classList.remove('bg-refahCard', 'text-gray-300');
+            event.target.classList.add('bg-refahOrange', 'text-white');
+
+            const items = document.querySelectorAll('.menu-item');
+            items.forEach(item => {
+                if (category === 'all' || item.getAttribute('data-category') === category) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // Toast Notification System (NO alert used!)
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+            toastMessage.textContent = message;
+            toast.classList.remove('translate-y-28', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-28', 'opacity-0');
+            }, 3500);
+        }
+
+        // Cart State & Drawer Logic
+        let cart = [];
+
+        function toggleCartDrawer() {
+            const drawer = document.getElementById('cart-drawer');
+            drawer.classList.toggle('translate-x-full');
+        }
+
+        function addToCart(itemName, unit) {
+            cart.push({ name: itemName, unit: unit });
+            updateCartUI();
+            showToast(`آیتم «${itemName}» به سبد سفارش اضافه شد.`);
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+            showToast('آیتم از سبد حذف شد.');
+        }
+
+        function updateCartUI() {
+            const container = document.getElementById('cart-items-container');
+            const badge = document.getElementById('cart-badge');
+            const badgeMobile = document.getElementById('cart-badge-mobile');
+            const totalCount = document.getElementById('cart-total-count');
+
+            badge.textContent = cart.length;
+            badgeMobile.textContent = cart.length;
+            totalCount.textContent = `${cart.length} آیتم`;
+
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div id="empty-cart-msg" class="text-center py-20 text-gray-500 space-y-3">
+                        <i class="fa-solid fa-basket-shopping text-5xl"></i>
+                        <p class="text-sm">سبد سفارش شما خالی است.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = '';
+            cart.forEach((item, index) => {
+                container.innerHTML += `
+                    <div class="glass-panel p-4 rounded-2xl flex items-center justify-between text-right">
+                        <div>
+                            <h4 class="font-bold text-white text-sm">${item.name}</h4>
+                            <p class="text-xs text-refahGold mt-0.5">واحد: ${item.unit}</p>
+                        </div>
+                        <button onclick="removeFromCart(${index})" class="text-red-400 hover:text-red-300 p-2 text-sm">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+            });
+        }
+
+        function checkoutCart() {
+            if (cart.length === 0) {
+                showToast('سبد سفارش شما خالی است!');
+                return;
+            }
+            toggleCartDrawer();
+            document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+            showToast('لطفا اطلاعات تماس خود را در فرم ثبت سفارش وارد کنید.');
+        }
+
+        // Form Submit Handler
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            const name = document.getElementById('clientName').value;
+            showToast(`کاربر گرامی ${name}، درخواست سفارش شما با موفقیت ثبت شد.`);
+            document.getElementById('orderForm').reset();
+            cart = [];
+            updateCartUI();
+        }
+    </script>
+</body>
+</html>
